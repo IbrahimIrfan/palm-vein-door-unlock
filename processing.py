@@ -8,7 +8,7 @@ def reduce_noise(img):
     return cv2.cvtColor(noise, cv2.COLOR_GRAY2BGR)
 
 # histogram equalization
-def equalize_hist(img):
+def equalize_hist(img, kernel):
     img = cv2.morphologyEx(img, cv2.MORPH_OPEN, kernel)
     img_yuv = cv2.cvtColor(img, cv2.COLOR_BGR2YUV)
     img_yuv[:,:,0] = cv2.equalizeHist(img_yuv[:,:,0])
@@ -18,8 +18,8 @@ def equalize_hist(img):
 def invert(img):
     return cv2.bitwise_not(img)
 
-# erosion
-def erode(img, kernel):
+# gray
+def gray(img):
     return cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
 # skeletonize the image
@@ -46,9 +46,9 @@ def thresh(img):
 img = cv2.imread("pic.jpg")
 kernel = np.ones((7,7),np.uint8)
 noise = reduce_noise(img)
-img_output = equalize_hist(noise)
+img_output = equalize_hist(noise, kernel)
 inv = invert(img_output)
-gray = erode(inv, kernel)
+gray = gray(inv)
 skeleton = skel(gray)
 thr = thresh(skeleton)
 cv2.imwrite("thr.jpg", thr)
