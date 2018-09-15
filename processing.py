@@ -1,17 +1,14 @@
 import cv2
 import numpy as np
-import tensorflow as tf
-from tensorflow import keras
-from PIL import Image
 
 # reduce noise in the image
-def reduceNoise():
+def reduce_noise(img):
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     noise = cv2.fastNlMeansDenoising(gray)
     return cv2.cvtColor(noise, cv2.COLOR_GRAY2BGR)
 
 # histogram equalization
-def histEqualization(img):
+def equalize_hist(img):
     img = cv2.morphologyEx(img, cv2.MORPH_OPEN, kernel)
     img_yuv = cv2.cvtColor(img, cv2.COLOR_BGR2YUV)
     img_yuv[:,:,0] = cv2.equalizeHist(img_yuv[:,:,0])
@@ -23,9 +20,7 @@ def invert(img):
 
 # erosion
 def erode(img, kernel):
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    erosion = cv2.erode(gray,kernel,iterations = 1)
-    return erosion, gray
+    return cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
 # skeletonize the image
 def skel(gray):
@@ -45,15 +40,15 @@ def skel(gray):
 
 # threshold to make the veins more visible
 def thresh(img):
-    ret, thr = cv2.threshold(img, 5,255, cv2.THRESH_BINARY);
+    _, thr = cv2.threshold(img, 5,255, cv2.THRESH_BINARY)
     return thr
 
 img = cv2.imread("pic.jpg")
 kernel = np.ones((7,7),np.uint8)
-noise = reduceNoise(img)
-img_output = equalizeHist(noise, kernel)
+noise = reduce_noise(img)
+img_output = equalize_hist(noise)
 inv = invert(img_output)
-eroded, gray = erode(inv)
+gray = erode(inv, kernel)
 skeleton = skel(gray)
 thr = thresh(skeleton)
 cv2.imwrite("thr.jpg", thr)

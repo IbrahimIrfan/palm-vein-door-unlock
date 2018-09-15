@@ -9,7 +9,7 @@ def euclidean_dist(vectors):
 
 # returns output shape for euclidiean distance
 def euclidean_dist_output_shape(shapes):
-  shape1, shape2 = shapes
+  shape1, _ = shapes
   return (shape1[0], 1)
 
 # contrastive loss function for one-shot learning

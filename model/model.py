@@ -13,31 +13,32 @@ def create_base_network(input_shape):
                                weights='imagenet',
                                input_shape = (224, 224, 3)
                               )
-
   # freeze everything except last 3 layers for training
   for layer in mobile_net_base.layers[:-3]:
     layer.trainable = False
 
-  model = models.Sequential()
+  base_model = models.Sequential()
   input = layers.Input(shape=(224, 224, 3))
 
   # add pre-trained model
-  model.add(mobile_net_base)
-
+  base_model.add(mobile_net_base)
   # add new fully-connected layers
-  model.add(layers.Flatten())
-  model.add(layers.Dense(1024, activation='relu'))
-  model.add(layers.Dropout(0.1))
-  model.add(layers.Dense(128, activation='relu'))
-  model.add(layers.Dropout(0.1))
-  model.add(layers.Dense(128, activation='relu'))
+  base_model.add(layers.Flatten())
+  base_model.add(layers.Dense(1024, activation='relu'))
+  base_model.add(layers.Dropout(0.1))
+  base_model.add(layers.Dense(128, activation='relu'))
+  base_model.add(layers.Dropout(0.1))
+  base_model.add(layers.Dense(128, activation='relu'))
+  return models.Model(input, base_model)
 
-  # Show a summary of the model. Check the number of trainable parameters
-  model.summary()
+model = create_base_network(input_shape)
 
-  distance = layers.Lambda(euclidean_dist, output_shape=euclidean_dist_output_shape)()
+# Show a summary of the model. Check the number of trainable parameters
+model.summary()
 
-  rms = optimizers.RMSprop()
-  model.compile(loss=contrastive_loss, optimizer=rms, metrics=[accuracy])
+distance = layers.Lambda(euclidean_dist, output_shape=euclidean_dist_output_shape)()
 
-  model.save('../data/palm_vein.h5')
+rms = optimizers.RMSprop()
+model.compile(loss=contrastive_loss, optimizer=rms, metrics=[accuracy])
+
+model.save('../data/palm_vein.h5')
