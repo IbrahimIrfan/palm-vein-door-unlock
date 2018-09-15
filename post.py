@@ -11,9 +11,9 @@ def postProcessed():
 def postImage(name):
     with open(name + ".jpg", "rb") as image_file:
         encoded_string = base64.b64encode(image_file.read())
-        payload = {name: encoded_string}
+        payload = {"type":"image", "img": encoded_string, "name":name}
         requests.post(url, data=payload)
 
 def postLabel(label, isAuthenticated):
-    payload = {"label": label, "auth": isAuthenticated}
+    payload = {"type":"label", "label": label, "auth": isAuthenticated}
     requests.post(url, data=payload)

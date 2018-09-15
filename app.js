@@ -13,14 +13,14 @@ app.all('/', function(req, res, next) {
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 app.post('/', (req, res) => {
-	img = req.body.img
-	processed = req.body.processed
-	fsPath.writeFile('images/image.jpeg', img, "base64", function(err){
-    	console.log("File saved to images/");
-    });
-	fsPath.writeFile('images/processed.jpeg', processed, "base64", function(err){
-    	console.log("File saved to images/");
-    });
+	if (req.body.type == "image") {
+		img = req.body.img;
+		fsPath.writeFile('images/' + req.body.name + ".jpg", img, "base64", function(err){
+    		console.log("File saved to images/");
+    	});
+	} else {
+		label = req.body.label;
+	}
 	res.send("done");
 });
 
