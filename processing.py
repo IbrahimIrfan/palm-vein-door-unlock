@@ -1,5 +1,4 @@
 import cv2
-import numpy as np
 
 # reduce noise in the image
 def reduce_noise(img):
@@ -43,12 +42,13 @@ def thresh(img):
     _, thr = cv2.threshold(img, 5,255, cv2.THRESH_BINARY)
     return thr
 
-img = cv2.imread("pic.jpg")
-kernel = np.ones((7,7),np.uint8)
-noise = reduce_noise(img)
-img_output = equalize_hist(noise, kernel)
-inv = invert(img_output)
-gray = gray(inv)
-skeleton = skel(gray)
-thr = thresh(skeleton)
-cv2.imwrite("thr.jpg", thr)
+def processImage():
+    img = cv2.imread("pic.jpg")
+    kernel = np.ones((7,7),np.uint8)
+    noise = reduce_noise(img)
+    img_output = equalize_hist(noise, kernel)
+    inv = invert(img_output)
+    gray = gray(inv)
+    skeleton = skel(gray)
+    thr = thresh(skeleton)
+    cv2.imwrite("thr.jpg", thr)

@@ -23,5 +23,5 @@ def reset(servo):
 
 def cleanup(servo):
     servo.stop()
-    GPIO.cleanup
+    GPIO.cleanup()
 
