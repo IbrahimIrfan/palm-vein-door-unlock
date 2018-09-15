@@ -42,8 +42,8 @@ def thresh(img):
     _, thr = cv2.threshold(img, 5,255, cv2.THRESH_BINARY)
     return thr
 
-def processImage():
-    img = cv2.imread("pic.jpg")
+def processImage(imgIn, imgOut):
+    img = cv2.imread(imgIn)
     kernel = np.ones((7,7),np.uint8)
     noise = reduce_noise(img)
     img_output = equalize_hist(noise, kernel)
@@ -51,4 +51,4 @@ def processImage():
     gray = gray(inv)
     skeleton = skel(gray)
     thr = thresh(skeleton)
-    cv2.imwrite("thr.jpg", thr)
+    cv2.imwrite(imgOut, thr)

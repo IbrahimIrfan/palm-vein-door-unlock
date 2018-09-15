@@ -1,23 +1,27 @@
 from processing import processImage
 from servo import *
+from post import *
+import subprocess
 
 servo = initGPIO()
 
 while(True):
-    input = raw_input("Ready.")
+    input = raw_input("Ready.\n")
     if "run" == input:
-        #take image
-        #upload raw
-        #process image
-        #upload processed
-        #call model
+        subprocess.call("./takePic.sh")
+        postOriginal()
+        processImage("pic.jpg", "thr.jpg")
+        postProcessed()
+        #TODO: call model, return label
         #check if authenticated
-        #actuate servo
-        #send label
+        isAuthenticated = 
+        postLabel(label, isAuthenticated)
+        if(isAuthenticated):
+            actuate(servo)
     else if "lock" == input:
-        reset(sevo)
+        reset(servo)
     else if "quit" == input:
         cleanup(servo)
         break
     else:
-        print("Invalid command.")
+        print("Invalid command.\n")
