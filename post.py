@@ -1,8 +1,9 @@
 import requests
 import base64
-url = "http://localhost:8000/"
+url = "http://192.168.43.153:8000/"
 
-with open("image.jpg", "rb") as image_file:
+with open("pic.jpg", "rb") as image_file:
     encoded_string = base64.b64encode(image_file.read())
     payload = {'img': encoded_string}
-    requests.post(url, data=payload)
+    r = requests.post(url, data=payload)
+    print r
