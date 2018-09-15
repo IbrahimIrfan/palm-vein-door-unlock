@@ -1,6 +1,7 @@
 import requests
 import base64
 url = "http://192.168.43.153:8000/"
+#url = "http://localhost:8000/"
 
 def postOriginal():
     postImage("pic")
