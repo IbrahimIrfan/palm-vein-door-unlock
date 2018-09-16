@@ -1,9 +1,7 @@
 import subprocess
 
 import numpy as np
-from keras.models import load_model
-from keras.utils.generic_utils import CustomObjectScope
-from keras.applications import mobilenet
+import tensorflow as tf
 
 import cv2
 from post import post_label, post_original, post_processed
@@ -31,16 +29,15 @@ while(True):
 
         input_img = load_img(processed_img_path, (224, 224))
         
-        with CustomObjectScope({'relu6': mobilenet.relu6,'DepthwiseConv2D': mobilenet.DepthwiseConv2D}):
-            model = load_model(model_path)
-            y_pred = model.predict(input_img)
-            max_index = np.argmax(y_pred[0])
-            label = classes[max_index]
+        model = tf.keras.models.load_model(model_path)
+        y_pred = model.predict(input_img)
+        max_index = np.argmax(y_pred[0])
+        label = classes[max_index]
 
         isAuthenticated = False
         if label == 'ayush_right' and y_pred[0][max_index] > 0.2:
             isAuthenticated = True
-            
+
         post_label(label, isAuthenticated)
         if(isAuthenticated):
             actuate(servo)
