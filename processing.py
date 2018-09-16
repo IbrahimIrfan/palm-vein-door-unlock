@@ -15,15 +15,15 @@ def equalize_hist(img, kernel):
     return cv2.cvtColor(img_yuv, cv2.COLOR_YUV2BGR)
 
 # invert a binary image
-def invert_img(img):
+def invert(img):
     return cv2.bitwise_not(img)
 
 # gray
-def gray_img(img):
+def gray(img):
     return cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
 # skeletonize the image
-def skel_img(gray):
+def skel(gray):
     img = gray.copy()
     skel = img.copy()
     skel[:,:] = 0
@@ -35,7 +35,6 @@ def skel_img(gray):
         temp = cv2.subtract(img, temp)
         skel = cv2.bitwise_or(skel, temp)
         img[:,:] = eroded[:,:]
-
     return skel
 
 # threshold to make the veins more visible
@@ -43,16 +42,21 @@ def thresh(img):
     _, thr = cv2.threshold(img, 5,255, cv2.THRESH_BINARY)
     return thr
 
-def processImage(imgIn, imgOut):
-    print "processing..."
+# loads image with specified size
+def load_img(path, shape):
+    img = cv2.imread(path)
+    return cv2.resize(img, shape)
+
+def process_image(imgIn, imgOut):
+    print("processing...")
     img = cv2.imread(imgIn)
     kernel = np.ones((7,7),np.uint8)
     noise = reduce_noise(img)
     img_output = equalize_hist(noise, kernel)
     inv = invert(img_output)
-    gray_scale = gray_img(inv)
-    print "skeletonizing..."
+    gray_scale = gray(inv)
+    print("skeletonizing...")
     skeleton = skel(gray_scale)
     thr = thresh(skeleton)
     cv2.imwrite(imgOut, thr)
-    print "done"
+    print("done")
