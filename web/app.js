@@ -19,16 +19,16 @@ app.all('/', function(req, res, next) {
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 app.post('/', (req, res) => {
-	if (req.body.type == "image") {
-		img = req.body.img;
-		fsPath.writeFile('views/images/' + req.body.name + ".jpg", img, "base64", function(err){
-    		console.log("File saved to views/images/");
-    	});
-	} else {
-		label = req.body.label;
-		auth = req.body.auth;
-	}
+	img = req.body.img;
+	fsPath.writeFile('views/images/' + req.body.name + ".jpg", img, "base64", function(err){
+    	console.log("File saved to views/images/");
+    });
 	res.send("Received");
+});
+
+app.get('/model', function(req, res) {
+	// do tensorflow stuff here
+	// res.send({label: "ibrahim", auth: true})
 });
 
 app.get('/', function(req, res) {
