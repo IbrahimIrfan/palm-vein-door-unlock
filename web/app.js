@@ -20,10 +20,17 @@ app.all('/', function(req, res, next) {
 
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
-app.post('/', (req, res) => {
+app.post('/raw', (req, res) => {
 	img = req.body.img;
 	fsPath.writeFile('views/images/' + req.body.name + ".jpg", img, "base64", function(err){
-    	console.log("File saved to views/images/");
+    	console.log("Raw file saved to views/images/");
+		});
+});
+
+app.post('/processed', (req, res) => {
+	img = req.body.img;
+	fsPath.writeFile('views/images/' + req.body.name + ".jpg", img, "base64", function(err){
+    	console.log("Processed file saved to views/images/");
 		});
 
 	const model = tf.loadModel('model/model.json');

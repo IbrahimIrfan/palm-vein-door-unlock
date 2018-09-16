@@ -14,6 +14,7 @@ while(True):
     input = raw_input("Ready.\n")
     if "run" == input:
         subprocess.call("./take_pic.sh")
+        print("image taken")
         post_original()
         process_image(raw_img_path, processed_img_path, img_shape)
         res = post_processed()

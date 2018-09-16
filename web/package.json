@@ -3,6 +3,7 @@
     "express": "latest",
     "body-parser": "latest",
     "fs-path": "latest",
+    "ejs": "latest",
     "@tensorflow/tfjs": "latest",
     "@tensorflow/tfjs-core": "latest",
     "@tensorflow/tfjs-node": "latest"

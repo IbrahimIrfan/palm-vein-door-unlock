@@ -13,12 +13,12 @@ def init_GPIO():
 
 def actuate(servo):
     time.sleep(0.5)
-    servo.ChangeDutyCycle(5.6)
+    servo.ChangeDutyCycle(5)
     time.sleep(0.5)
 
 def reset(servo):
     time.sleep(0.5)
-    servo.ChangeDutyCycle(10.3)
+    servo.ChangeDutyCycle(10)
     time.sleep(0.5)
 
 def cleanup(servo):
