@@ -15,11 +15,8 @@ class DataGenerator(object):
     x_train /= 255
     x_test /= 255
 
-    label_indices = [np.where(y_train == i)[0] for i in range(num_classes)]
-    self.train_pairs, self.train_y = self.create_image_pairs(x_train, label_indices, num_classes)
-
-    label_indices = [np.where(y_test == i)[0] for i in range(num_classes)]
-    self.test_pairs, self.test_y = self.create_image_pairs(x_test, label_indices, num_classes)
+    self.train_pairs, self.train_y = self.create_image_pairs(x_train, y_train)
+    self.test_pairs, self.test_y = self.create_image_pairs(x_test, y_test)
 
     self.train_pairs_0 = self.train_pairs[:, 0]
     self.train_pairs_1 = self.train_pairs[:, 1]
@@ -73,11 +70,14 @@ class DataGenerator(object):
     f.close()
     return (x_train, y_train), (x_test, y_test), num_classes
 
-  # creates pairs of positive and negative images for contrastive loss training
-  def create_image_pairs(self, x, label_indices, num_classes):
+  # creates pairs of images for contrastive loss training
+  def create_image_pairs(self, x, y):
     pairs = []
     labels = []
-    
+    for i in range(0, x.shape[0]):
+      for j in range(i + 1, x.shape[0]):
+        pairs += [x[i], x[j]]
+        labels += [[1, 1 if y[i] == y[j] else 0]]
     return np.array(pairs), np.array(labels)
 
   def create_multiple_generator(self, generator, pairs_0, pairs_1, y_0, y_1, batch_size):

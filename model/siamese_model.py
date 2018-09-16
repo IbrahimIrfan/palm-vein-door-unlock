@@ -71,7 +71,7 @@ batch_size = 32
 input_shape = (224, 224, 3)
 data_path = '../data/dataset.h5'
 test_data_path = '../data/test_dataset.h5'
-model_output_path = '../data/palm_vein_model.h5'
+model_output_path = '../data/palm_vein_siamese_model.h5'
 
 datagen = DataGenerator(batch_size, data_path, test_data_path)
 

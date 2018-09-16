@@ -9,6 +9,7 @@ from processing import load_img, process_image
 from servo import actuate, cleanup, init_GPIO, reset
 
 servo = init_GPIO()
+img_shape = (224, 224)
 model_path = "./data/palm_vein_model.h5"
 raw_img_path = "pic.jpg"
 processed_img_path = "thr.jpg"
@@ -24,21 +25,13 @@ while(True):
     if "run" == input:
         subprocess.call("./take_pic.sh")
         post_original()
-        process_image(raw_img_path, processed_img_path)
-        post_processed()
-
-        input_img = load_img(processed_img_path, (224, 224))
-        
-        model = tf.keras.models.load_model(model_path)
-        y_pred = model.predict(input_img)
-        max_index = np.argmax(y_pred[0])
-        label = classes[max_index]
+        process_image(raw_img_path, processed_img_path, img_shape)
+        res = post_processed()
 
         isAuthenticated = False
-        if label == 'ayush_right' and y_pred[0][max_index] > 0.2:
+        if res == 't':
             isAuthenticated = True
 
-        post_label(label, isAuthenticated)
         if(isAuthenticated):
             actuate(servo)
 
