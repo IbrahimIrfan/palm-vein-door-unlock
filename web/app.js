@@ -6,6 +6,7 @@ const port = 8000;
 const fsPath = require('fs-path');
 var label = "Unidentified";
 var auth = false;
+var classes = ['ayush_left', 'ayush_right', 'ibrahim_left', 'ibrahim_right'];
 
 app.use(express.static("views"));
 app.set('views', __dirname + '/views');
@@ -30,18 +31,15 @@ app.post('/', (req, res) => {
 	const prediction = model.predict(image);
 	const classIndex = prediction.argMax(1);
 
-	var lock = "lock";
-	
-	if (classes[classIndex] === 'ayush_right') {
-		lock = "unlock";
+	label = classes[classIndex];
+
+	if (label == 'ayush_right') {
+		auth = true
 		res.send("t");
 	} else {
+		auth = false
 		res.send("f");
 	}
-	res.render('index', {
-		label: classes[classIndex],
-		auth: lock
-	});
 });
 
 app.get('/', function(req, res) {
