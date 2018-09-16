@@ -1,4 +1,3 @@
-const tf = require('@tensorflow/tfjs-node');
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
@@ -6,7 +5,6 @@ const port = 3000;
 const fsPath = require('fs-path');
 var label = "Unidentified";
 var auth = false;
-var classes = ['ayush_left', 'ayush_right', 'ibrahim_left', 'ibrahim_right'];
 
 app.use(express.static("views"));
 app.set('views', __dirname + '/views');
@@ -20,35 +18,12 @@ app.all('/', function(req, res, next) {
 
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
-app.post('/raw', (req, res) => {
-	console.log("hello world");
-	img = req.body.img;
-	fsPath.writeFile('views/images/' + req.body.name + ".jpg", img, "base64", function(err){
-    	console.log("Raw file saved to views/images/");
-		});
-	res.send(200);
-});
-
 app.post('/processed', (req, res) => {
 	img = req.body.img;
 	fsPath.writeFile('views/images/' + req.body.name + ".jpg", img, "base64", function(err){
     	console.log("Processed file saved to views/images/");
 		});
-
-	const model = tf.loadModel('model/model.json');
-	const image = tf.fromPixels('views/images/' + req.body.name + ".jpg");
-	const prediction = model.predict(image);
-	const classIndex = prediction.argMax(1);
-
-	label = classes[classIndex];
-
-	if (label == 'ayush_right') {
-		auth = true
-		res.send("t");
-	} else {
-		auth = false
-		res.send("f");
-	}
+	res.send(200);
 });
 
 app.get('/', function(req, res) {

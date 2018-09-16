@@ -10,9 +10,6 @@ from keras.preprocessing.image import ImageDataGenerator
 from keras.utils import to_categorical
 from keras.utils.generic_utils import CustomObjectScope
 
-import tensorflowjs as tfjs
-from data_generator import DataGenerator
-
 
 # base model to be shared for feature extraction pretrained on MobileNet weights
 def create_base_model(input_shape, num_classes):
@@ -79,7 +76,6 @@ classes = ['ayush_left', 'ayush_right', 'ibrahim_left', 'ibrahim_right']
 y_train = to_categorical(y_train, num_classes=num_classes)
 y_test = to_categorical(y_test, num_classes=num_classes)
 
-'''
 datagen = ImageDataGenerator(
     rotation_range=40,
     width_shift_range=0.2,
@@ -92,20 +88,17 @@ datagen = ImageDataGenerator(
 
 train_generator = datagen.flow(x_train, y_train)
 val_generator = datagen.flow(x_test, y_test)
-'''
-model = load_model(model_output_path)
-#model = create_base_model(input_shape, num_classes)
+
+# model = load_model(model_output_path)
+model = create_base_model(input_shape, num_classes)
 
 sgd = SGD(lr=0.0007, decay=1e-6, momentum=0.9)
 model.compile(optimizer=sgd, loss='categorical_crossentropy', metrics=['accuracy'])
-model.fit(x_train, y_train, validation_data=(x_test, y_test), epochs=epochs, batch_size=batch_size)
-'''
 model.fit_generator(train_generator,
                     steps_per_epoch=x_train.shape[0] // batch_size,
                     epochs=epochs,
                     validation_data=val_generator,
                     validation_steps=x_test.shape[0] // batch_size)
-'''
 
 score = model.evaluate(x_test, y_test)
 print("[Loss, Accuracy]:", score)
@@ -116,4 +109,3 @@ for prediction in predictions:
   print(classes[np.argmax(prediction)])
 
 model.save(model_output_path)
-tfjs.converters.save_keras_model(model, tfjs_target_dir)
