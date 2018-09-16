@@ -1,4 +1,5 @@
 import cv2
+import numpy as np
 
 # reduce noise in the image
 def reduce_noise(img):
@@ -18,7 +19,7 @@ def invert(img):
     return cv2.bitwise_not(img)
 
 # gray
-def gray(img):
+def gray_img(img):
     return cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
 # skeletonize the image
@@ -43,12 +44,15 @@ def thresh(img):
     return thr
 
 def processImage(imgIn, imgOut):
+    print "processing..."
     img = cv2.imread(imgIn)
     kernel = np.ones((7,7),np.uint8)
     noise = reduce_noise(img)
     img_output = equalize_hist(noise, kernel)
     inv = invert(img_output)
-    gray = gray(inv)
-    skeleton = skel(gray)
+    gray_scale = gray_img(inv)
+    print "skeletonizing..."
+    skeleton = skel(gray_scale)
     thr = thresh(skeleton)
     cv2.imwrite(imgOut, thr)
+    print "done"
