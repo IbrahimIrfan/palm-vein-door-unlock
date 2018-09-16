@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "express": "latest",
+    "body-parser": "latest",
+    "fs-path": "latest",
+    "@tensorflow/tfjs": "latest",
+    "@tensorflow/tfjs-core": "latest",
+    "@tensorflow/tfjs-node": "latest"
+  }
+}

@@ -42,12 +42,7 @@ def thresh(img):
     _, thr = cv2.threshold(img, 5,255, cv2.THRESH_BINARY)
     return thr
 
-# loads image with specified size
-def load_img(path, shape):
-    img = cv2.imread(path)
-    return cv2.resize(img, shape)
-
-def process_image(imgIn, imgOut):
+def process_image(imgIn, imgOut, shape):
     print("processing...")
     img = cv2.imread(imgIn)
     kernel = np.ones((7,7),np.uint8)
@@ -58,5 +53,6 @@ def process_image(imgIn, imgOut):
     print("skeletonizing...")
     skeleton = skel(gray_scale)
     thr = thresh(skeleton)
+    cv2.resize(thr, shape)
     cv2.imwrite(imgOut, thr)
     print("done")
