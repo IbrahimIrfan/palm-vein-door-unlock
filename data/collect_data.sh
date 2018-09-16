@@ -6,7 +6,7 @@ do
     echo 'Enter name (lowercase)'
     read name
     #do right training data collection
-    for i in {0..4}
+    for i in {0..19}
     do
     	fileNameRight=${name}_right_${i}.jpg
     	echo $fileNameRight
@@ -17,7 +17,7 @@ do
     read garbage
 
     #do left training data collection
-    for i in {0..4}
+    for i in {0..19}
     do
     	fileNameLeft=${name}_left_${i}.jpg
     	echo $fileNameLeft
