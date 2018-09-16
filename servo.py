@@ -1,7 +1,7 @@
 import RPi.GPIO as GPIO
 import time
 
-def initGPIO():
+def init_GPIO():
     GPIO.setmode(GPIO.BOARD)
     #servo signal is on pin18
     GPIO.setup(18, GPIO.OUT)

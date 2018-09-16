@@ -15,7 +15,7 @@ def equalize_hist(img, kernel):
     return cv2.cvtColor(img_yuv, cv2.COLOR_YUV2BGR)
 
 # invert a binary image
-def invert(img):
+def invert_img(img):
     return cv2.bitwise_not(img)
 
 # gray
@@ -23,7 +23,7 @@ def gray_img(img):
     return cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
 # skeletonize the image
-def skel(gray):
+def skel_img(gray):
     img = gray.copy()
     skel = img.copy()
     skel[:,:] = 0
