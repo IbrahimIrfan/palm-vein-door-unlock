@@ -1,9 +1,5 @@
 import subprocess
 
-import numpy as np
-import tensorflow as tf
-
-import cv2
 from post import post_label, post_original, post_processed
 from processing import process_image
 from servo import actuate, cleanup, init_GPIO, reset
