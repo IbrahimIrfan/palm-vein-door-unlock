@@ -2,39 +2,55 @@ import h5py
 import numpy as np
 from keras import backend as K
 from keras.applications import MobileNet, mobilenet
-from keras.layers import (Dense, Dropout, Flatten, GlobalAveragePooling2D,
-                          Input, Reshape)
+from keras.layers import (Activation, BatchNormalization, Conv2D, Dense,
+                          Dropout, Flatten, MaxPooling2D)
 from keras.models import Sequential, load_model
 from keras.optimizers import SGD
+from keras.preprocessing.image import ImageDataGenerator
 from keras.utils import to_categorical
 from keras.utils.generic_utils import CustomObjectScope
-from keras.preprocessing.image import ImageDataGenerator
 
 from data_generator import DataGenerator
 
 
 # base model to be shared for feature extraction pretrained on MobileNet weights
 def create_base_model(input_shape, num_classes):
-  # initialize pre-trained base model for fine tuning
-  mobile_net_base = MobileNet(include_top=False,
-                               weights=None,
-                               input_shape=(224, 224, 3)
-                             )
-  # freeze everything except last 3 layers for training
-  for layer in mobile_net_base.layers[:-3]:
-    layer.trainable = False
-
   model = Sequential()
+  # first convolution layer
+  model.add(Conv2D(64, kernel_size=(3, 3), padding="same",
+                  activation='relu',
+                  input_shape=input_shape))
+  model.add(BatchNormalization())
+  model.add(Dropout(0.25))  
 
-  # add pre-trained model
-  model.add(mobile_net_base)
-  # add new convolution layers and fully-connected layers
-  model.add(GlobalAveragePooling2D())
-  model.add(Reshape((1, 1, 1024)))
+  # second convolution layer
+  model.add(Conv2D(64, kernel_size=(3, 3), activation='relu'))
+  model.add(BatchNormalization())
+  model.add(MaxPooling2D())
+  model.add(Dropout(0.25))
+
+  # third convolution layer
+  model.add(Conv2D(64, kernel_size=(3, 3), activation='relu'))
+  model.add(BatchNormalization())
+  model.add(MaxPooling2D())
+  model.add(Dropout(0.25))
+
+  # third convolution layer
+  model.add(Conv2D(64, kernel_size=(5, 5), activation='relu', strides=(3, 3)))
+  model.add(BatchNormalization())
+  model.add(MaxPooling2D())
+  model.add(Dropout(0.25))
+
+  # first fully connected layer
   model.add(Flatten())
-  model.add(Dense(512, activation='relu'))
-  model.add(Dropout(0.5))
-  model.add(Dense(num_classes, activation='softmax'))
+  model.add(Dense(512, use_bias=False))
+  model.add(BatchNormalization())
+  model.add(Activation('relu'))
+  model.add(Dropout(0.25))
+
+  # final fully connected layer
+  model.add(Dense(num_classes))
+  model.add(Activation('softmax'))
   model.summary()
   return model
 
@@ -50,7 +66,6 @@ def get_data(data_path, test_data_path):
   y_test = np.array(f['y'].value)
   f.close()
   return (x_train, y_train), (x_test, y_test), num_classes
-
 
 epochs = 15
 batch_size = 8
@@ -83,9 +98,7 @@ datagen = ImageDataGenerator(
 train_generator = datagen.flow(x_train, y_train)
 val_generator = datagen.flow(x_test, y_test)
 
-with CustomObjectScope({'relu6': mobilenet.relu6,'DepthwiseConv2D': mobilenet.DepthwiseConv2D}):
-  model = load_model('../data/palm_vein_model.h5')
-
+model = create_base_model(input_shape, num_classes)
 sgd = SGD(lr=0.01, decay=1e-9, momentum=0.9, nesterov=True)
 model.compile(optimizer=sgd, loss='categorical_crossentropy', metrics=['accuracy'])
 model.fit_generator(train_generator,

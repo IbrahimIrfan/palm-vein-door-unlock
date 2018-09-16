@@ -16,7 +16,7 @@ def save_data(image_path, output_path, is_test=False):
     label_idx = -1
     for file in os.listdir(image_path):
         if is_test:
-            if file.endswith("4.jpg"):
+            if file.endswith("4.jpg") or file.endswith("5.jpg") or file.endswith("6.jpg") or file.endswith("7.jpg"):
                 values = file.split('_')
                 img = cv2.imread(image_path + file)
                 img = cv2.resize(img, (224, 224))
@@ -26,7 +26,7 @@ def save_data(image_path, output_path, is_test=False):
                 y.append(label_idx)
                 x.append(img)
         else:
-            if not file.endswith("4.jpg") and file:
+            if not (file.endswith("4.jpg") or file.endswith("5.jpg") or file.endswith("6.jpg") or file.endswith("7.jpg")):
                 values = file.split('_')
                 img = cv2.imread(image_path + file)
                 img = cv2.resize(img, (224, 224))
@@ -43,7 +43,7 @@ def save_data(image_path, output_path, is_test=False):
         os.remove(output_path)
     except OSError:
         pass
-    print(labels)
+
     f = h5py.File(output_path)
     f['x'] = x
     f['y'] = y

@@ -40,7 +40,7 @@ while(True):
         isAuthenticated = False
         if label == 'ayush_right' and y_pred[0][max_index] > 0.2:
             isAuthenticated = True
-
+            
         post_label(label, isAuthenticated)
         if(isAuthenticated):
             actuate(servo)
